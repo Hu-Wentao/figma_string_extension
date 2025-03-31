@@ -1,9 +1,17 @@
 library figma_string_extension;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 extension FigmaStringX on String {
+  /// figma Radius
+  /// 12px
+  BorderRadiusGeometry get asBorderRadius {
+    assert(endsWith('px'));
+    final radius = double.parse(substring(0, length - 2));
+    return BorderRadius.all(Radius.circular(radius));
+  }
+
   /// figma box-shadow 注意,包含 ‘;’
   /// box-shadow: 0px 3px 3px 0px #0000001F;
   List<BoxShadow> get asBoxShadows =>
