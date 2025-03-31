@@ -1,20 +1,5 @@
-## Features
-
-- asBoxShadow
-- asColor
-
-## Getting started
-
-```dart
 import 'package:figma_string_extension/figma_string_extension.dart';
-```
-
-## Usage
-
-see more at `/example` folder.
-
-```dart
-import 'package:figma_string_extension/figma_string_extension.dart';
+import 'package:flutter/material.dart';
 
 main() {
   runApp(MaterialApp(
@@ -33,7 +18,3 @@ main() {
     ),
   ));
 }
-```
-
-## Additional information
-
