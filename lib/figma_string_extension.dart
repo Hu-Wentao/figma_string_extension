@@ -6,7 +6,7 @@ import 'package:flutter/painting.dart';
 extension FigmaStringX on String {
   /// figma Radius
   /// 12px
-  BorderRadiusGeometry get asBorderRadius {
+  BorderRadiusGeometry get asBorderRadiusAll {
     assert(endsWith('px'));
     final radius = double.parse(substring(0, length - 2));
     return BorderRadius.all(Radius.circular(radius));
@@ -41,8 +41,8 @@ extension FigmaStringX on String {
   /// figma color
   /// #035F9E #D8F0FE33
   Color get asColor {
-    assert(
-        startsWith('#') && (length == 7 || length == 9), '颜色字符串必须以#开头，长度为7或9');
+    assert(startsWith('#') && (length == 7 || length == 9),
+        'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).');
     if (length == 7) {
       return Color(int.parse('FF${substring(1)}', radix: 16));
     } else {
