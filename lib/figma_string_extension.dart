@@ -5,9 +5,20 @@ import 'package:flutter/painting.dart';
 
 class FigmaStringConfig {
   static Color Function(String)? _colorResolver;
+  static TextStyle Function(String)? _textStyleResolver;
 
+  @Deprecated('setResolver')
   static void setColorResolver(Color Function(String) resolver) =>
       _colorResolver = resolver;
+
+  ///
+  static void setResolver({
+    Color Function(String)? colorRes,
+    TextStyle Function(String)? textRes,
+  }) {
+    if (colorRes != null) _colorResolver = colorRes;
+    if (textRes != null) _textStyleResolver = textRes;
+  }
 }
 
 extension FigmaStringX on String {
@@ -60,5 +71,10 @@ extension FigmaStringX on String {
       return FigmaStringConfig._colorResolver?.call(this) ??
           (throw "Please config `FigmaString.setColorResolver` [$this]");
     }
+  }
+
+  TextStyle get asTextStyle {
+    return FigmaStringConfig._textStyleResolver?.call(this) ??
+        (throw "Please config `FigmaString.setTextStyleResolver` [$this]");
   }
 }
