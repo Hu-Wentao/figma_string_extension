@@ -2,6 +2,16 @@ import 'package:figma_string_extension/figma_string_extension.dart';
 import 'package:flutter/material.dart';
 
 main() {
+  FigmaStringConfig.setColorResolver((p) {
+    // if you have custom color
+    switch (p) {
+      case 'Card Color':
+        return const Color(0xffFFF0FE);
+      default:
+        throw 'unknown color [$p]';
+    }
+  });
+
   runApp(MaterialApp(
     home: Scaffold(
       body: Center(
