@@ -3,6 +3,13 @@ library figma_string_extension;
 import 'package:collection/collection.dart';
 import 'package:flutter/painting.dart';
 
+class FigmaStringConfig {
+  static Color Function(String)? _colorResolver;
+
+  static void setColorResolver(Color Function(String) resolver) =>
+      _colorResolver = resolver;
+}
+
 extension FigmaStringX on String {
   /// figma Radius
   /// 12px
@@ -41,12 +48,17 @@ extension FigmaStringX on String {
   /// figma color
   /// #035F9E #D8F0FE33
   Color get asColor {
-    assert(startsWith('#') && (length == 7 || length == 9),
-        'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).');
-    if (length == 7) {
-      return Color(int.parse('FF${substring(1)}', radix: 16));
+    if (startsWith('#')) {
+      if (length == 7) {
+        return Color(int.parse('FF${substring(1)}', radix: 16));
+      } else if (length == 9) {
+        return Color(int.parse(substring(7) + substring(1, 7), radix: 16));
+      } else {
+        throw 'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).';
+      }
     } else {
-      return Color(int.parse(substring(7) + substring(1, 7), radix: 16));
+      return FigmaStringConfig._colorResolver?.call(this) ??
+          (throw "Please config `FigmaString.setColorResolver` [$this]");
     }
   }
 }
