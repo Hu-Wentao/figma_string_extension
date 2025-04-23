@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/painting.dart';
 
 class FigmaStringConfig {
-  static Color Function(String)? _colorResolver;
-  static TextStyle Function(String)? _textStyleResolver;
+  static Color? Function(String)? _colorResolver;
+  static TextStyle? Function(String)? _textStyleResolver;
 
   @Deprecated('setResolver')
   static void setColorResolver(Color Function(String) resolver) =>
@@ -13,8 +13,8 @@ class FigmaStringConfig {
 
   ///
   static void setResolver({
-    Color Function(String)? colorRes,
-    TextStyle Function(String)? textRes,
+    Color? Function(String)? colorRes,
+    TextStyle? Function(String)? textRes,
   }) {
     if (colorRes != null) _colorResolver = colorRes;
     if (textRes != null) _textStyleResolver = textRes;
@@ -77,4 +77,15 @@ extension FigmaStringX on String {
     return FigmaStringConfig._textStyleResolver?.call(this) ??
         (throw "Please config `FigmaString.setTextStyleResolver` [$this]");
   }
+}
+
+extension FigmaTextStyleX on TextStyle{
+  TextStyle withColor(String color) => copyWith(color: color.asColor);
+
+  @Deprecated('withBlackOr')
+  TextStyle withColorBlackOr([String? color]) =>
+      copyWith(color: (color ?? '#000000').asColor);
+
+  TextStyle withBlackOr([String color = '#000000']) =>
+      copyWith(color: color.asColor);
 }
