@@ -1,3 +1,6 @@
+## 0.2.1
+* remove setColorResolver
+
 ## 0.2.0
 * feat FigmaStringConfig.setResolver; asTextStyle
 * deprecation setColorResolver

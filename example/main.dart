@@ -2,7 +2,7 @@ import 'package:figma_string_extension/figma_string_extension.dart';
 import 'package:flutter/material.dart';
 
 main() {
-  FigmaStringConfig.setColorResolver((p) {
+  FigmaStringConfig.setResolver(colorRes: (p) {
     // if you have custom color
     switch (p) {
       case 'Card Color':

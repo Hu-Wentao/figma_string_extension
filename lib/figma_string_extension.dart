@@ -7,10 +7,6 @@ class FigmaStringConfig {
   static Color? Function(String)? _colorResolver;
   static TextStyle? Function(String)? _textStyleResolver;
 
-  @Deprecated('setResolver')
-  static void setColorResolver(Color Function(String) resolver) =>
-      _colorResolver = resolver;
-
   ///
   static void setResolver({
     Color? Function(String)? colorRes,
@@ -79,13 +75,12 @@ extension FigmaStringX on String {
   }
 }
 
-extension FigmaTextStyleX on TextStyle{
+extension FigmaTextStyleX on TextStyle {
   TextStyle withColor(String color) => copyWith(color: color.asColor);
-
-  @Deprecated('withBlackOr')
-  TextStyle withColorBlackOr([String? color]) =>
-      copyWith(color: (color ?? '#000000').asColor);
 
   TextStyle withBlackOr([String color = '#000000']) =>
       copyWith(color: color.asColor);
+
+  @Deprecated('withBlackOr')
+  TextStyle withColorBlackOr([String color = '#000000']) => withBlackOr(color);
 }
