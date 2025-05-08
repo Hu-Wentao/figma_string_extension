@@ -58,12 +58,12 @@ class FigmaStringConfig {
       }
     }
     return color?.call(s) ??
-        (throw "Please config `FigmaString.setResolver(color)` [$s]");
+        (throw "Not match [$s]; Please config `$FigmaStringConfig.setResolver(color)`");
   }
 
   TextStyle asTextStyle(String s) {
     return FigmaStringConfig.I.textStyle?.call(s) ??
-        (throw "Please config `FigmaString.setResolver(textStyle)` [$s]");
+        (throw "Not match [$s]; Please config `$FigmaStringConfig.setResolver(textStyle)`");
   }
 }
 
