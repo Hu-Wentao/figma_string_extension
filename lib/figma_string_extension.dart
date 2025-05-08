@@ -2,18 +2,68 @@ library figma_string_extension;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/painting.dart';
+import 'package:get_it/get_it.dart';
 
 class FigmaStringConfig {
-  static Color? Function(String)? _colorResolver;
-  static TextStyle? Function(String)? _textStyleResolver;
+  Color? Function(String)? color;
+  bool autoParseHexColor;
+  TextStyle? Function(String)? textStyle;
+
+  FigmaStringConfig({
+    this.color,
+    this.autoParseHexColor = true,
+    this.textStyle,
+  });
 
   ///
+  /// if use [FigmaStringConfig].[setResolver]
+  static FigmaStringConfig? _;
+
+  static FigmaStringConfig get I {
+    if (GetIt.I.isRegistered<FigmaStringConfig>()) {
+      return GetIt.I.get<FigmaStringConfig>();
+    }
+    return _ ??= FigmaStringConfig();
+  }
+
+  /// [setResolver] can help you quick start work
+  /// (if you not use get_it register<FigmaStringConfig>)
   static void setResolver({
-    Color? Function(String)? colorRes,
-    TextStyle? Function(String)? textRes,
+    Color? Function(String)? color,
+    bool autoParseHexColor = true,
+    TextStyle? Function(String)? textStyle,
+    //
+    @Deprecated('colorRes') Color? Function(String)? colorRes,
+    @Deprecated('textStyle') TextStyle? Function(String)? textRes,
   }) {
-    if (colorRes != null) _colorResolver = colorRes;
-    if (textRes != null) _textStyleResolver = textRes;
+    final c = FigmaStringConfig.I;
+    if (colorRes != null) c.color = colorRes;
+    if (textRes != null) c.textStyle = textRes;
+  }
+
+  ///
+
+  /// #035F9E #D8F0FE33
+  Color asColor(String s) {
+    if (autoParseHexColor) {
+      if (s.startsWith('#')) {
+        if (s.length == 7) {
+          return Color(int.parse('FF${s.substring(1)}', radix: 16));
+        } else if (s.length == 9) {
+          return Color(
+              int.parse(s.substring(7) + s.substring(1, 7), radix: 16));
+        } else {
+          throw 'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).';
+        }
+      }
+    }
+    return color?.call(s) ??
+        (throw "Please config `FigmaString.setResolver(color)` [$s]");
+  }
+
+  TextStyle asTextStyle(String s) {
+    return FigmaStringConfig.I.textStyle?.call(s) ??
+        (throw "Please config `FigmaString.setResolver(textStyle)` [$s]");
   }
 }
 
@@ -54,25 +104,9 @@ extension FigmaStringX on String {
 
   /// figma color
   /// #035F9E #D8F0FE33
-  Color get asColor {
-    if (startsWith('#')) {
-      if (length == 7) {
-        return Color(int.parse('FF${substring(1)}', radix: 16));
-      } else if (length == 9) {
-        return Color(int.parse(substring(7) + substring(1, 7), radix: 16));
-      } else {
-        throw 'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).';
-      }
-    } else {
-      return FigmaStringConfig._colorResolver?.call(this) ??
-          (throw "Please config `FigmaString.setColorResolver` [$this]");
-    }
-  }
+  Color get asColor => FigmaStringConfig.I.asColor(this);
 
-  TextStyle get asTextStyle {
-    return FigmaStringConfig._textStyleResolver?.call(this) ??
-        (throw "Please config `FigmaString.setTextStyleResolver` [$this]");
-  }
+  TextStyle get asTextStyle => FigmaStringConfig.I.asTextStyle(this);
 }
 
 extension FigmaTextStyleX on TextStyle {

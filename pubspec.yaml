@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.18.0
+  get_it: ^8.0.3
 
 dev_dependencies:
   flutter_test:
