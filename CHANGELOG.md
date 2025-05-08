@@ -1,3 +1,6 @@
+## 0.3.0
+* feat use get_it config Resolver
+
 ## 0.2.1
 * remove setColorResolver
 
