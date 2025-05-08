@@ -1,3 +1,6 @@
+## 0.3.1
+* use get_it: ^7.6.7
+
 ## 0.3.0
 * feat use get_it config Resolver
 
