@@ -18,11 +18,10 @@ class FigmaStringConfig {
   ///
   /// if use [FigmaStringConfig].[setResolver]
   static FigmaStringConfig? _;
-  static const singletonName = 'I';
 
   static FigmaStringConfig get I {
-    if (GetIt.I.isRegistered<FigmaStringConfig>(instanceName: singletonName)) {
-      return GetIt.I.get<FigmaStringConfig>(instanceName: singletonName);
+    if (GetIt.I.isRegistered<FigmaStringConfig>()) {
+      return GetIt.I.get<FigmaStringConfig>();
     }
     return _ ??= FigmaStringConfig();
   }
