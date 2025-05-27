@@ -1,3 +1,7 @@
+## 0.4.0 2025-5-27
+* feat merge other FigmaStringConfig
+* remove singletonName
+
 ## 0.3.3
 * use get_it: 7.6.7, but override as 8.0.0-pre-1; this version is "^7.6.7+1"
 
