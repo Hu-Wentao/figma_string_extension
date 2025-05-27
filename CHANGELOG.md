@@ -1,3 +1,7 @@
+## 0.3.2
+* use get_it: 8.0.0-pre-1; this version is "^7.6.7+1"
+* feat add FigmaStringConfig.singletonName 'I'
+
 ## 0.3.1
 * use get_it: ^7.6.7
 
