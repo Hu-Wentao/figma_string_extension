@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 class FigmaStringConfig {
   Color? Function(String)? color;
-  bool autoParseHexColor;
+  bool? autoParseHexColor; // null, will use old; if old == null, use 'false'.
   TextStyle? Function(String)? textStyle;
 
   FigmaStringConfig({
@@ -27,6 +27,13 @@ class FigmaStringConfig {
     return _ ??= FigmaStringConfig();
   }
 
+  /// old add [extend]
+  FigmaStringConfig merge(FigmaStringConfig extend) => FigmaStringConfig(
+        color: (p) => color?.call(p) ?? extend.color?.call(p),
+        autoParseHexColor: autoParseHexColor ?? extend.autoParseHexColor,
+        textStyle: textStyle ?? extend.textStyle,
+      );
+
   /// [setResolver] can help you quick start work
   /// (if you not use get_it register<FigmaStringConfig>)
   static void setResolver({
@@ -46,13 +53,14 @@ class FigmaStringConfig {
 
   /// #035F9E #D8F0FE33
   Color asColor(String s) {
-    if (autoParseHexColor) {
+    if (autoParseHexColor ?? false) {
       if (s.startsWith('#')) {
         if (s.length == 7) {
           return Color(int.parse('FF${s.substring(1)}', radix: 16));
         } else if (s.length == 9) {
           return Color(
-              int.parse(s.substring(7) + s.substring(1, 7), radix: 16));
+            int.parse(s.substring(7) + s.substring(1, 7), radix: 16),
+          );
         } else {
           throw 'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).';
         }
@@ -63,7 +71,7 @@ class FigmaStringConfig {
   }
 
   TextStyle asTextStyle(String s) {
-    return FigmaStringConfig.I.textStyle?.call(s) ??
+    return textStyle?.call(s) ??
         (throw "Not match [$s]; Please config `$FigmaStringConfig.setResolver(textStyle)`");
   }
 }
