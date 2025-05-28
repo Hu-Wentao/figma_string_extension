@@ -1,77 +1,90 @@
 library figma_string_extension;
 
+export 'package:figma_string_extension/resolver/color.dart';
+export 'package:figma_string_extension/resolver/text_style.dart';
+
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
+import 'package:figma_string_extension/resolver/color.dart';
+import 'package:figma_string_extension/resolver/text_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:get_it/get_it.dart';
 
 class FigmaStringConfig {
-  Color? Function(String)? color;
-  bool? autoParseHexColor; // null, will use old; if old == null, use 'false'.
-  TextStyle? Function(String)? textStyle;
+  Set<ColorResolverPart> colorResolvers = {};
+  Set<TextStyleResolverPart> textStyleResolvers = {};
 
-  FigmaStringConfig({
-    this.color,
-    this.autoParseHexColor = true,
-    this.textStyle,
-  });
+  FigmaStringConfig.init({
+    Iterable<ColorResolverPart>? colorResolvers,
+    Iterable<TextStyleResolverPart>? textStyleResolvers,
+  })  : textStyleResolvers = {...?textStyleResolvers},
+        colorResolvers = {...?colorResolvers, figmaColorResolver};
 
-  ///
-  /// if use [FigmaStringConfig].[setResolver]
-  static FigmaStringConfig? _;
+  // null: by kDebugModel; true: enable; false disable
+  static bool? enableLog;
 
   static FigmaStringConfig get I {
-    if (GetIt.I.isRegistered<FigmaStringConfig>()) {
-      return GetIt.I.get<FigmaStringConfig>();
+    // auto reg
+    if (!GetIt.I.isRegistered<FigmaStringConfig>()) {
+      final cfg = FigmaStringConfig.init(
+        colorResolvers: GetIt.I.getAll<ColorResolverPart>(),
+        textStyleResolvers: GetIt.I.getAll<TextStyleResolverPart>(),
+      );
+      GetIt.I.registerSingleton(cfg);
+      if (enableLog ?? kDebugMode) log('Auto Reg[$FigmaStringConfig]:\n\t$cfg');
     }
-    return _ ??= FigmaStringConfig();
+    return GetIt.I<FigmaStringConfig>();
   }
 
-  /// old add [extend]
-  FigmaStringConfig merge(FigmaStringConfig extend) => FigmaStringConfig(
-        color: (p) => color?.call(p) ?? extend.color?.call(p),
-        autoParseHexColor: autoParseHexColor ?? extend.autoParseHexColor,
-        textStyle: textStyle ?? extend.textStyle,
-      );
+  /// insert new resolver
+  static void insertResolver({
+    Iterable<ColorResolverPart>? colorResolvers,
+    Iterable<TextStyleResolverPart>? textStyleResolvers,
+  }) {
+    final cfg = FigmaStringConfig.I;
+    cfg.colorResolvers = {...?colorResolvers, ...cfg.colorResolvers};
+    cfg.textStyleResolvers = {
+      ...?textStyleResolvers,
+      ...cfg.textStyleResolvers
+    };
+  }
 
-  /// [setResolver] can help you quick start work
-  /// (if you not use get_it register<FigmaStringConfig>)
+  /// replace resolver
   static void setResolver({
-    Color? Function(String)? color,
-    bool autoParseHexColor = true,
-    TextStyle? Function(String)? textStyle,
-    //
-    @Deprecated('colorRes') Color? Function(String)? colorRes,
-    @Deprecated('textStyle') TextStyle? Function(String)? textRes,
+    Iterable<ColorResolverPart>? colorResolvers,
+    Iterable<TextStyleResolverPart>? textStyleResolvers,
   }) {
     final c = FigmaStringConfig.I;
-    if (colorRes != null) c.color = colorRes;
-    if (textRes != null) c.textStyle = textRes;
+    if (colorResolvers != null) c.colorResolvers = colorResolvers.toSet();
+    if (textStyleResolvers != null) {
+      c.textStyleResolvers = textStyleResolvers.toSet();
+    }
   }
+
+  @override
+  String toString() => ''
+      'color: $colorResolvers\n'
+      'textStyle: $textStyleResolvers\n';
 
   ///
 
   /// #035F9E #D8F0FE33
   Color asColor(String s) {
-    if (autoParseHexColor ?? false) {
-      if (s.startsWith('#')) {
-        if (s.length == 7) {
-          return Color(int.parse('FF${s.substring(1)}', radix: 16));
-        } else if (s.length == 9) {
-          return Color(
-            int.parse(s.substring(7) + s.substring(1, 7), radix: 16),
-          );
-        } else {
-          throw 'The color string must start with # and be 7 characters long or 9 characters long (with Opacity).';
-        }
-      }
+    for (final res in colorResolvers) {
+      final r = res.color.call(s);
+      if (r != null) return r;
     }
-    return color?.call(s) ??
-        (throw "Not match [$s]; Please config `$FigmaStringConfig.setResolver(color)`");
+    throw "Not match Color[$s]; \nPlease config `$FigmaStringConfig.addResolver`";
   }
 
   TextStyle asTextStyle(String s) {
-    return textStyle?.call(s) ??
-        (throw "Not match [$s]; Please config `$FigmaStringConfig.setResolver(textStyle)`");
+    for (final res in textStyleResolvers) {
+      final r = res.textStyle.call(s);
+      if (r != null) return r;
+    }
+    throw "Not match TextStyle[$s]; \nPlease config `$FigmaStringConfig.addResolver`";
   }
 }
 
@@ -95,7 +108,7 @@ extension FigmaStringX on String {
     final p = split(' ');
     assert(p[0] == 'box-shadow:', '请输入figma box-shadow: 包含开头');
     assert(p.length == 6, '请输入figma box-shadow: 完整参数');
-    final color = p[5].asColor;
+    final color = figmaColorResolver.color(p[5])!;
     final pixels = p
         .slice(1, 5)
         .map((_) => double.parse(_.substring(0, _.length - 2)))

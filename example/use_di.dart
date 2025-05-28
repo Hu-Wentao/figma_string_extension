@@ -5,8 +5,8 @@ import 'package:get_it/get_it.dart';
 main() {
   WidgetsFlutterBinding.ensureInitialized();
   // reg use get_it
-  GetIt.I.registerSingleton<FigmaStringConfig>(
-    FigmaStringConfig(color: (p) {
+  GetIt.I.registerSingleton<ColorResolverPart>(
+    ColorResolverPart((p) {
       // if you have custom color
       switch (p) {
         case 'Card Color':
@@ -15,6 +15,19 @@ main() {
           throw 'unknown color [$p]';
       }
     }),
+    instanceName: 'CustomName(Optional)'
+  );
+  GetIt.I.registerSingleton<ColorResolverPart>(
+      ColorResolverPart((p) {
+        // if you have custom color
+        switch (p) {
+          case 'Main Color':
+            return Colors.red;
+          default:
+            throw 'unknown color [$p]';
+        }
+      }),
+      instanceName: 'CustomName2, multiple color resolver must set different name'
   );
 
   runApp(MaterialApp(
