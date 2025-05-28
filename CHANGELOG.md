@@ -1,3 +1,8 @@
+## 0.5.0 2025-5-28 (break)
+* feat ColorResolverPart, TextStyleResolverPart  
+* feat insertResolver 
+* refactor setResolver
+
 ## 0.4.0 2025-5-27
 * feat merge other FigmaStringConfig
 * remove singletonName
