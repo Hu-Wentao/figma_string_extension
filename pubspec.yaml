@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.18.0
-  get_it: 7.6.7 # fixed; "8.0.0-pre-1" is "7.6.7+1", use 'getAll';
+  get_it: ^7.6.7 # fixed; "8.0.0-pre-1" is "7.6.7+1", use 'getAll';
 
 dev_dependencies:
   flutter_test:
