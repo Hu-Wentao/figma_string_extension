@@ -1,3 +1,6 @@
+## 1.0.0 2025-8-18
+* adp get_it ^8.2.0; Flutter 3.32.5
+
 ## 0.5.0 2025-5-28 (break)
 * feat ColorResolverPart, TextStyleResolverPart  
 * feat insertResolver 
