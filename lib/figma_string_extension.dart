@@ -23,17 +23,38 @@ class FigmaStringConfig {
         colorResolvers = {...?colorResolvers, figmaColorResolver};
 
   // null: by kDebugModel; true: enable; false disable
-  static bool? enableLog;
+  static bool enableLog = kDebugMode;
+  static String logName = 'FigmaStringConfig';
 
   static FigmaStringConfig get I {
     // auto reg
     if (!GetIt.I.isRegistered<FigmaStringConfig>()) {
+      List<ColorResolverPart>? colors;
+      List<TextStyleResolverPart>? styles;
+      try {
+        colors = GetIt.I.getAll<ColorResolverPart>().toList();
+      } catch (e) {
+        if (enableLog) {
+          log('DEV TIPS: You are not register any `ColorResolverPart`',
+              name: logName);
+        }
+      }
+      try {
+        styles = GetIt.I.getAll<TextStyleResolverPart>().toList();
+      } catch (e) {
+        if (enableLog) {
+          log('DEV TIPS: You are not register any `ColorResolverPart`',
+              name: logName);
+        }
+      }
       final cfg = FigmaStringConfig.init(
-        colorResolvers: GetIt.I.getAll<ColorResolverPart>(),
-        textStyleResolvers: GetIt.I.getAll<TextStyleResolverPart>(),
+        colorResolvers: colors,
+        textStyleResolvers: styles,
       );
       GetIt.I.registerSingleton(cfg);
-      if (enableLog ?? kDebugMode) log('Auto Reg[$FigmaStringConfig]:\n\t$cfg');
+      if (enableLog) {
+        log('Auto Reg[$FigmaStringConfig]:\n\t$cfg', name: logName);
+      }
     }
     return GetIt.I<FigmaStringConfig>();
   }

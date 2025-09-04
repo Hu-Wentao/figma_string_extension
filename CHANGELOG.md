@@ -1,3 +1,6 @@
+## 1.0.1 2025-9-4
+* fix auto register by FigmaStringConfig.I error
+
 ## 1.0.0 2025-8-18
 * adp get_it ^8.2.0; Flutter 3.32.5
 
