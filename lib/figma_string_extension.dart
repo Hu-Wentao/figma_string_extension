@@ -16,7 +16,8 @@ class FigmaStringConfig {
   Set<ColorResolverPart> colorResolvers = {};
   Set<TextStyleResolverPart> textStyleResolvers = {};
 
-  FigmaStringConfig.init({
+  /// will auto set [figmaColorResolver]
+  FigmaStringConfig.of({
     Iterable<ColorResolverPart>? colorResolvers,
     Iterable<TextStyleResolverPart>? textStyleResolvers,
   })  : textStyleResolvers = {...?textStyleResolvers},
@@ -47,7 +48,7 @@ class FigmaStringConfig {
               name: logName);
         }
       }
-      final cfg = FigmaStringConfig.init(
+      final cfg = FigmaStringConfig.of(
         colorResolvers: colors,
         textStyleResolvers: styles,
       );
@@ -149,6 +150,10 @@ extension FigmaStringX on String {
   Color get asColor => FigmaStringConfig.I.asColor(this);
 
   TextStyle get asTextStyle => FigmaStringConfig.I.asTextStyle(this);
+
+  @Deprecated('use "FigmaStringConfig.of" instead')
+  @visibleForTesting
+  static get init => FigmaStringConfig.of;
 }
 
 extension FigmaTextStyleX on TextStyle {

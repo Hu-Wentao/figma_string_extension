@@ -1,8 +1,15 @@
 ## Features
 
-- asColor
+### asColor
+```dart
+'#00FF00'.asColor, // Color(0xff00FF00)
+```
+
 - asTextStyle
 - asBoxShadow
+```dart
+'box-shadow: 0px 3px 3px 0px #0000001F;'.asBoxShadows, //
+```
 
 ## Getting started
 

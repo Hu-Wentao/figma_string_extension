@@ -6,28 +6,28 @@ main() {
   WidgetsFlutterBinding.ensureInitialized();
   // reg use get_it
   GetIt.I.registerSingleton<ColorResolverPart>(
-    ColorResolverPart((p) {
-      // if you have custom color
-      switch (p) {
-        case 'Card Color':
-          return const Color(0xffFFF0FE);
-        default:
-          throw 'unknown color [$p]';
-      }
-    }),
-    instanceName: 'CustomName(Optional)'
-  );
-  GetIt.I.registerSingleton<ColorResolverPart>(
-      ColorResolverPart((p) {
-        // if you have custom color
-        switch (p) {
-          case 'Main Color':
-            return Colors.red;
-          default:
-            throw 'unknown color [$p]';
-        }
-      }),
-      instanceName: 'CustomName2, multiple color resolver must set different name'
+      ColorResolverPart((p) => switch (p) {
+            'Card Color' => const Color(0xffFFF0FE),
+            'Card Title Container Color' => const Color(0xffFFF2FE),
+            _ => throw 'unknown color [$p]',
+          }),
+      instanceName: 'CustomName(Optional)');
+  GetIt.I.registerSingleton<TextStyleResolverPart>(
+    TextStyleResolverPart(
+      (p) => switch (p) {
+        'Card Text' => const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        'Card Title' => const TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.w500,
+          ),
+        _ => throw 'unknown textStyle [$p]'
+      },
+    ),
+    instanceName:
+        'CustomName2, multiple color resolver must set different name',
   );
 
   runApp(MaterialApp(

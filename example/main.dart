@@ -5,28 +5,20 @@ main() {
   FigmaStringConfig.insertResolver(
       // if you have custom color
       colorResolvers: [
-        ColorResolverPart((p) {
-          switch (p) {
-            case 'Card Color':
-              return const Color(0xffFFF0FE);
-            default:
-              throw 'unknown color [$p]';
-          }
-        })
+        ColorResolverPart((p) => switch (p) {
+              'Card Color' => const Color(0xffFFF0FE),
+              _ => throw 'unknown color [$p]',
+            })
       ],
       // if you have custom textStyle
       textStyleResolvers: [
         TextStyleResolverPart(
-          (p) {
-            switch (p) {
-              case 'Card Text':
-                return const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                );
-              default:
-                throw 'unknown textStyle [$p]';
-            }
+          (p) => switch (p) {
+            'Card Text' => const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            _ => throw 'unknown textStyle [$p]'
           },
         )
       ]);
@@ -49,6 +41,7 @@ main() {
               decoration: BoxDecoration(
                 /// figma hex color
                 color: '#D8F0FEF1'.asColor,
+
                 /// figma box-shadow
                 boxShadow:
                     'box-shadow: 0px 3px 3px 0px #0000001F;'.asBoxShadows,
