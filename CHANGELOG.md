@@ -1,3 +1,6 @@
+## 1.0.2 2025-10-17
+* fix figma box-shadow, support end with ';'
+
 ## 1.0.1 2025-9-4
 * fix auto register by FigmaStringConfig.I error
 
