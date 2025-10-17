@@ -121,15 +121,21 @@ extension FigmaStringX on String {
 
   /// figma box-shadow 注意,包含 ‘;’
   /// box-shadow: 0px 3px 3px 0px #0000001F;
-  List<BoxShadow> get asBoxShadows =>
-      split(';').whereNot((_) => _ == '').map((e) => e.asBoxShadow).toList();
+  List<BoxShadow> get asBoxShadows => split(';')
+      .whereNot((_) => _ == '')
+      .map((e) => e.trim().asBoxShadow)
+      .toList();
 
   /// figma box-shadow
   /// box-shadow: 0px 3px 3px 0px #0000001F
   BoxShadow get asBoxShadow {
     final p = split(' ');
-    assert(p[0] == 'box-shadow:', '请输入figma box-shadow: 包含开头');
-    assert(p.length == 6, '请输入figma box-shadow: 完整参数');
+    assert(p[0] == 'box-shadow:', 'please input full figma box-shadow param (include `box-shadow`)');
+    assert(p.length == 6, 'please input full figma box-shadow param');
+    var colorRaw = p[5];
+    if (colorRaw.endsWith(';')) {
+      colorRaw = colorRaw.substring(0, colorRaw.length - 1);
+    }
     final color = figmaColorResolver.color(p[5])!;
     final pixels = p
         .slice(1, 5)
