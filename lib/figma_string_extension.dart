@@ -122,7 +122,7 @@ extension FigmaStringX on String {
   /// figma box-shadow 注意,包含 ‘;’
   /// box-shadow: 0px 3px 3px 0px #0000001F;
   List<BoxShadow> get asBoxShadows => split(';')
-      .whereNot((_) => _ == '')
+      .whereNot((e) => e == '')
       .map((e) => e.trim().asBoxShadow)
       .toList();
 
@@ -130,7 +130,8 @@ extension FigmaStringX on String {
   /// box-shadow: 0px 3px 3px 0px #0000001F
   BoxShadow get asBoxShadow {
     final p = split(' ');
-    assert(p[0] == 'box-shadow:', 'please input full figma box-shadow param (include `box-shadow`)');
+    assert(p[0] == 'box-shadow:',
+        'please input full figma box-shadow param (include `box-shadow`)');
     assert(p.length == 6, 'please input full figma box-shadow param');
     var colorRaw = p[5];
     if (colorRaw.endsWith(';')) {
