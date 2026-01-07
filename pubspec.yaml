@@ -1,6 +1,6 @@
 name: figma_string_extension
 description: "Convert Figma String to Flutter Widget"
-version: 1.0.2
+version: 1.1.0
 homepage: https://github.com/Hu-Wentao/figma_string_extension.git
 
 environment:

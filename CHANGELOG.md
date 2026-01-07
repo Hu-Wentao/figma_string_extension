@@ -1,3 +1,6 @@
+## 1.1.0 2026-01-07
+* feat ColorX ::toHexString
+
 ## 1.0.2 2025-10-17
 * fix figma box-shadow, support end with ';'
 

@@ -172,3 +172,7 @@ extension FigmaTextStyleX on TextStyle {
   @Deprecated('withBlackOr')
   TextStyle withColorBlackOr([String color = '#000000']) => withBlackOr(color);
 }
+
+extension ColorX on Color {
+  String get toHexString => '#${toARGB32().toRadixString(16)}';
+}
