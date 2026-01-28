@@ -111,6 +111,23 @@ class FigmaStringConfig {
 }
 
 extension FigmaStringX on String {
+  /// figma border
+  /// 'border: 1px solid #FFFFFF'
+  /// 'border: 1px solid #FFFFFF11'
+  /// 'border: 123px solid #FFFFFF11'
+  /// 'border: 1.23px solid #FFFFFF11'
+  /// 'border: 12.23px solid #FFFFFF11'
+  BoxBorder get asBoxBorder {
+    final reg = RegExp('border: (\d+\.?\d*px) (.+) (#.{6,8})');
+    final m = reg.firstMatch(this);
+    if (m == null) throw 'asBoxBorder None Match Error for `$this`';
+    return Border.all(
+      color: m.group(3)!.asColor,
+      width: double.parse(m.group(1)!),
+      style: {'solid': BorderStyle.solid}[m.group(2)!] ?? BorderStyle.none,
+    );
+  }
+
   /// figma Radius
   /// 12px
   BorderRadiusGeometry get asBorderRadiusAll {

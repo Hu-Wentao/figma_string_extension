@@ -1,3 +1,6 @@
+## 1.2.0 2026-01-28
+* feat FigmaStringX ::asBoxBorder
+
 ## 1.1.1 2026-01-28
 * refix figma box-shadow, support end with ';'
 
