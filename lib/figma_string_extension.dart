@@ -137,7 +137,7 @@ extension FigmaStringX on String {
     if (colorRaw.endsWith(';')) {
       colorRaw = colorRaw.substring(0, colorRaw.length - 1);
     }
-    final color = figmaColorResolver.color(p[5])!;
+    final color = figmaColorResolver.color(colorRaw)!;
     final pixels = p
         .slice(1, 5)
         .map((_) => double.parse(_.substring(0, _.length - 2)))
